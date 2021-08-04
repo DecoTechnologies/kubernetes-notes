@@ -18,7 +18,7 @@ The Ingress controller is an application that runs in a cluster and configures a
 In the case of NGINX, the Ingress controller is deployed in a pod along with the load balancer.
 
 
-# Installing the Ingress Controller In Amazom EKS using Helm Charts
+# Installing the Ingress Controller In Amazon EKS using Helm Charts
 # Install helm a package manager for kubernetes
 ```
  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
