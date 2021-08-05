@@ -43,7 +43,7 @@ helm repo update
 
 ```
  helm ls
- kubectl get all -n ingress-nginx
+ kubectl get all -n nginx-ingress
 ```
 
 ## 4.  How Ingress Controller can be deployed
