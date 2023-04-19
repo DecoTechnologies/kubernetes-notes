@@ -23,7 +23,6 @@ In the case of NGINX, the Ingress controller is deployed in a pod along with the
 ```
  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
  chmod 700 get_helm.sh
- sh get_helm.sh
 ./get_helm.sh
 
 ```
@@ -31,19 +30,25 @@ In the case of NGINX, the Ingress controller is deployed in a pod along with the
 ## 1. Add helm charts for Nginx Ingress into a server where you have kubectl and helm
 
 ```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add nginx https://helm.nginx.com/stable
 helm repo update
 ```
 ## 2. Deploy nginx-ingress using helm chart
  # NB. This will create nginx-ingress namespace, clusterRole, ClusterRoleBinding and more
 ```
- $ helm install nginx-ingress ingress-nginx/ingress-nginx
+  helm install nginx nginx/nginx-ingress
+```
+## 2b. UnDeploy nginx-ingress using helm
+ # NB. This will delete nginx-ingress and all associated resources and services
+```
+  helm uninstall nginx
 ```
 ## 3. Verify nginx-ingress is running
 
 ```
  helm ls
- kubectl get all -n ingress-nginx
+ kubectl get all
+ kubectl get svc
 ```
 
 ## 4.  How Ingress Controller can be deployed
@@ -75,7 +80,7 @@ kubectl apply -f service/loadbalancer-aws-elb.yaml
 
 To get the DNS name of the ELB, run:
 ```
-$ kubectl describe svc ingress-nginx --namespace=ingress-nginx
+ kubectl describe svc ingress-nginx --namespace=ingress-nginx
 ```
 
 `OR`
@@ -200,6 +205,32 @@ spec:
       - backend:
           serviceName: springapp
           servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-resource-1
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: landmarkfintech.com
+    secretName: mylandmarktech-ingress-tls
+    http:
+      paths:
+      # Default Path(/)
+      - backend:
+          serviceName: springapp
+          servicePort: 80
+      - path: /app
+        backend:
+          serviceName: webapp
+          servicePort: 80
+      - path: /java-web-app
+        backend:
+          serviceName: javawebapp
+          servicePort: 80
+```
 
-
+### Alternatively Deploy Ingress in kubernetes using Manifest Files
+https://github.com/LandmakTechnology/kubernestes-ingress
 ```
